@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muzz Factory UMB</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #e8e8e8;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 24px; }
+  h1 {
+    font-size: 2rem;
+    background: linear-gradient(90deg, #4ade80, #22d3ee, #a78bfa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 6px;
+  }
+  .subtitle { color: #94a3b8; font-size: 0.9rem; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: rgba(30, 41, 59, 0.75);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+    backdrop-filter: blur(10px);
+  }
+  .card h2 {
+    font-size: 0.95rem;
+    color: #22d3ee;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(34, 211, 238, 0.15);
+    color: #22d3ee;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  /* ============ SKIN ============ */
+  .drop-zone {
+    border: 2px dashed #475569;
+    border-radius: 12px;
+    padding: 20px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: rgba(15, 23, 42, 0.4);
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: #22d3ee;
+    background: rgba(34, 211, 238, 0.08);
+  }
+  .drop-zone.has-file { border-color: #4ade80; background: rgba(74, 222, 128, 0.08); }
+  .drop-zone input { display: none; }
+  .drop-zone .icon { font-size: 1.6rem; margin-bottom: 4px; }
+  .drop-zone .text { color: #94a3b8; font-size: 0.82rem; }
+  .drop-zone .filename { color: #4ade80; font-weight: 600; margin-top: 6px; font-size: 0.85rem; }
+
+  /* ============ BOTONES GRANDES ============ */
+  button.big {
+    width: 100%; padding: 13px; font-size: 1rem; font-weight: 700;
+    border: none; border-radius: 10px; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 4px;
+  }
+  button.generate {
+    background: linear-gradient(90deg, #4ade80, #22d3ee);
+    color: #0f172a;
+  }
+  button.generate:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(34, 211, 238, 0.4);
+  }
+  button.download {
+    background: linear-gradient(90deg, #a78bfa, #f472b6);
+    color: #0f172a;
+  }
+  button.download:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(167, 139, 250, 0.4);
+  }
+  button.big:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ============ TOGGLE SLIM ============ */
+  .toggle-row {
+    display: flex; gap: 8px;
+  }
+  .toggle-btn {
+    flex: 1;
+    padding: 11px 10px;
+    border: 1px solid #475569;
+    border-radius: 9px;
+    background: #1e293b;
+    color: #94a3b8;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .toggle-btn.active {
+    background: linear-gradient(90deg, #7e57c2, #a78bfa);
+    color: white;
+    border-color: #a78bfa;
+    box-shadow: 0 4px 15px rgba(167, 139, 250, 0.3);
+  }
+  .toggle-btn:not(.active):hover { background: #334155; }
+
+  /* ============ INFO SKIN ============ */
+  .info-line {
+    padding: 9px 11px;
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .info-line .label { color: #94a3b8; }
+  .info-line .value { color: #ffaa00; font-weight: 600; }
+
+  /* ============ CHECKBOXES / SELECTS ============ */
+  .checkbox-row {
+    display: flex; align-items: center; gap: 9px; padding: 8px 10px;
+    background: rgba(15, 23, 42, 0.5); border-radius: 7px; margin-bottom: 5px;
+    cursor: pointer; transition: background 0.2s; font-size: 0.85rem;
+  }
+  .checkbox-row:hover { background: rgba(34, 211, 238, 0.1); }
+  .checkbox-row input[type="checkbox"] {
+    width: 16px; height: 16px; accent-color: #22d3ee; cursor: pointer;
+  }
+
+  .select-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 10px; background: rgba(15, 23, 42, 0.5);
+    border-radius: 7px; margin-bottom: 5px; font-size: 0.85rem;
+  }
+  .select-row select {
+    background: #1e293b; color: #e8e8e8; border: 1px solid #475569;
+    border-radius: 6px; padding: 4px 8px; font-size: 0.82rem; cursor: pointer;
+  }
+
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+  .section-label {
+    display: block; font-size: 0.78rem; color: #cbd5e1;
+    margin: 8px 0 5px 0; font-weight: 600;
+  }
+
+  /* ============ PREVIEW ============ */
+  .preview-box {
+    background: #0f172a;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .preview-box img {
+    max-width: 100%;
+    max-height: 520px;
+    image-rendering: pixelated;
+    border-radius: 6px;
+  }
+  .preview-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+  }
+  .preview-nav button {
+    background: #1e293b; color: #e8e8e8; border: 1px solid #475569;
+    border-radius: 8px; padding: 7px 13px; cursor: pointer; font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .preview-nav button:hover:not(:disabled) { background: #334155; }
+  .preview-nav .page-info { font-weight: 600; color: #ffaa00; font-size: 0.88rem; }
+
+  /* ============ STATUS ============ */
+  .status {
+    text-align: center; padding: 10px; border-radius: 8px;
+    font-size: 0.85rem; display: none;
+  }
+  .status.info { background: rgba(34, 211, 238, 0.15); color: #22d3ee; display: block; }
+  .status.error { background: rgba(239, 68, 68, 0.15); color: #f87171; display: block; }
+  .status.success { background: rgba(74, 222, 128, 0.15); color: #4ade80; display: block; }
+
+  .spinner {
+    display: inline-block; width: 13px; height: 13px;
+    border: 2px solid rgba(15,23,42,0.3); border-top-color: #0f172a;
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+    vertical-align: middle; margin-right: 7px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  footer { text-align: center; color: #64748b; font-size: 0.78rem; padding: 24px 0 10px; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🧩 Muzz Factory UMB</h1>
+    <p class="subtitle">Generador de plantillas papercraft para Minecraft</p>
+  </header>
+
+  <form id="form" enctype="multipart/form-data">
+    <div class="layout">
+
+      <!-- ===================== COLUMNA IZQUIERDA: CONTROLES ===================== -->
+      <div>
+
+        <!-- 1. IMPORTAR SKIN -->
+        <div class="card">
+          <h2><span class="num">1</span> Importar skin</h2>
+          <div class="drop-zone" id="dropZone">
+            <input type="file" name="skin" id="skinInput" accept=".png" required>
+            <div class="icon">⬆️</div>
+            <div class="text">Arrastra tu skin PNG o haz clic</div>
+            <div class="text" style="font-size:0.72rem; margin-top:3px;">64×64 o 128×128</div>
+            <div class="filename" id="fileName"></div>
+          </div>
+        </div>
+
+        <!-- 2. GENERAR -->
+        <div class="card">
+          <h2><span class="num">2</span> Generar</h2>
+          <button type="submit" class="big generate" id="btnGen">🚀 Generar plantillas</button>
+        </div>
+
+        <!-- 3. SLIM / NORMAL -->
+        <div class="card">
+          <h2><span class="num">3</span> Modelo</h2>
+          <div class="toggle-row">
+            <button type="button" class="toggle-btn active" id="btnNormal">NORMAL</button>
+            <button type="button" class="toggle-btn" id="btnSlim">SLIM</button>
+          </div>
+          <input type="hidden" name="modo_slim" id="modo_slim" value="false">
+        </div>
+
+        <!-- 4. DESCARGAR -->
+        <div class="card">
+          <h2><span class="num">4</span> Descargar</h2>
+          <button type="button" class="big download" id="btnDownload" disabled>⬇️ Descargar PDF</button>
+        </div>
+
+        <!-- 5. TIPO DE SKIN -->
+        <div class="card">
+          <h2><span class="num">5</span> Tipo de skin</h2>
+          <div class="info-line">
+            <span class="label">Detectado:</span>
+            <span class="value" id="txtTipo">—</span>
+          </div>
+        </div>
+
+        <!-- 6. BORDES -->
+        <div class="card">
+          <h2><span class="num">6</span> Bordes</h2>
+          <label class="checkbox-row">
+            <input type="checkbox" name="modo_borde" id="modo_borde">
+            <span>Activar bordes oscuros</span>
+          </label>
+          <div id="bordeOptions" class="hidden">
+            <span class="section-label">Páginas con borde:</span>
+            <div class="grid-3">
+              <label class="checkbox-row"><input type="checkbox" name="borde_1"><span>Pág 1</span></label>
+              <label class="checkbox-row"><input type="checkbox" name="borde_2"><span>Pág 2</span></label>
+              <label class="checkbox-row"><input type="checkbox" name="borde_3"><span>Pág 3</span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. CROMA -->
+        <div class="card">
+          <h2><span class="num">7</span> Croma</h2>
+          <label class="checkbox-row">
+            <input type="checkbox" name="modo_croma" id="modo_croma">
+            <span>Activar cromas</span>
+          </label>
+          <div id="cromaOptions" class="hidden">
+            <span class="section-label">Color por página:</span>
+            <div class="select-row"><label>Página 1</label>
+              <select name="croma_1"><option>OFF</option><option>NEGRO</option><option>VERDE</option><option>ROSA</option></select></div>
+            <div class="select-row"><label>Página 2</label>
+              <select name="croma_2"><option>OFF</option><option>NEGRO</option><option>VERDE</option><option>ROSA</option></select></div>
+            <div class="select-row"><label>Página 3</label>
+              <select name="croma_3"><option>OFF</option><option>NEGRO</option><option>VERDE</option><option>ROSA</option></select></div>
+            <div class="select-row"><label>Página 5</label>
+              <select name="croma_5"><option>OFF</option><option>NEGRO</option><option>VERDE</option><option>ROSA</option></select></div>
+          </div>
+        </div>
+
+        <!-- 8. LIENZO P5 -->
+        <div class="card">
+          <h2><span class="num">8</span> Lienzo P5</h2>
+          <div class="select-row">
+            <label>Color de fondo</label>
+            <select name="fondo_p5">
+              <option value="DESACTIVADO">Desactivado</option>
+              <option value="BLANCO">Blanco</option>
+              <option value="NEGRO">Negro</option>
+              <option value="GRIS">Gris</option>
+              <option value="ROSA">Rosa</option>
+              <option value="VERDE">Verde</option>
+            </select>
+          </div>
+          <div id="capeOptions" class="hidden">
+            <span class="section-label">Capas activas:</span>
+            <div class="grid-3">
+              <label class="checkbox-row"><input type="checkbox" name="cape_1"><span>Capa 1</span></label>
+              <label class="checkbox-row"><input type="checkbox" name="cape_2"><span>Capa 2</span></label>
+              <label class="checkbox-row"><input type="checkbox" name="cape_3"><span>Capa 3</span></label>
+              <label class="checkbox-row"><input type="checkbox" name="cape_4"><span>Capa 4</span></label>
+              <label class="checkbox-row"><input type="checkbox" name="cape_5"><span>Capa 5</span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. ESTADO -->
+        <div class="card">
+          <h2><span class="num">9</span> Estado</h2>
+          <div class="status" id="status">Esperando skin...</div>
+        </div>
+
+      </div>
+
+      <!-- ===================== COLUMNA DERECHA: PREVIEW ===================== -->
+      <div>
+        <div class="card">
+          <h2>👁️ Panel de vista previa</h2>
+          <div class="preview-box" id="previewBox">
+            <div style="color:#64748b; font-size:0.9rem; text-align:center;">
+              Sube una skin y pulsa <b>Generar</b><br>
+              <span style="font-size:0.8rem;">Las 5 páginas aparecerán aquí</span>
+            </div>
+          </div>
+          <div class="preview-nav hidden" id="previewNav">
+            <button type="button" id="btnPrev">← Anterior</button>
+            <span class="page-info" id="pageInfo">Página 1 / 5</span>
+            <button type="button" id="btnNext">Siguiente →</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </form>
+
+  <footer>Muzz Factory UMB · Papercraft Generator</footer>
+</div>
+
+<script>
+  // ============ REFERENCIAS ============
+  const form = document.getElementById('form');
+  const dropZone = document.getElementById('dropZone');
+  const skinInput = document.getElementById('skinInput');
+  const fileName = document.getElementById('fileName');
+  const btnGen = document.getElementById('btnGen');
+  const btnDownload = document.getElementById('btnDownload');
+  const statusEl = document.getElementById('status');
+  const previewBox = document.getElementById('previewBox');
+  const previewNav = document.getElementById('previewNav');
+  const pageInfo = document.getElementById('pageInfo');
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  const txtTipo = document.getElementById('txtTipo');
+
+  const btnNormal = document.getElementById('btnNormal');
+  const btnSlim = document.getElementById('btnSlim');
+  const modoSlimInput = document.getElementById('modo_slim');
+
+  // Estado local del navegador
+  let pdfBase64 = null;
+  let currentPage = 1;
+  let previews = {};
+
+  // ============ DRAG & DROP ============
+  dropZone.addEventListener('click', () => skinInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
+      skinInput.files = e.dataTransfer.files;
+      updateFileName();
+    }
+  });
+  skinInput.addEventListener('change', () => {
+    updateFileName();
+    detectarTipoSkin();
+  });
+
+  function updateFileName() {
+    if (skinInput.files.length) {
+      fileName.textContent = '✓ ' + skinInput.files[0].name;
+      dropZone.classList.add('has-file');
+    } else {
+      fileName.textContent = '';
+      dropZone.classList.remove('has-file');
+    }
+  }
+
+  // Detectar tipo de skin leyendo las dimensiones del PNG en el navegador
+  function detectarTipoSkin() {
+    if (!skinInput.files.length) {
+      txtTipo.textContent = '—';
+      return;
+    }
+    const file = skinInput.files[0];
+    const img = new Image();
+    img.onload = () => {
+      if (img.width === 64 && img.height === 64) {
+        txtTipo.textContent = 'CLÁSICA (64×64)';
+      } else if (img.width === 128 && img.height === 128) {
+        txtTipo.textContent = 'BEDROCK (128×128)';
+      } else {
+        txtTipo.textContent = `⚠️ ${img.width}×${img.height} (inválida)`;
+      }
+      URL.revokeObjectURL(img.src);
+    };
+    img.src = URL.createObjectURL(file);
+  }
+
+  // ============ TOGGLE SLIM / NORMAL ============
+  btnNormal.addEventListener('click', () => {
+    btnNormal.classList.add('active');
+    btnSlim.classList.remove('active');
+    modoSlimInput.value = 'false';
+  });
+  btnSlim.addEventListener('click', () => {
+    btnSlim.classList.add('active');
+    btnNormal.classList.remove('active');
+    modoSlimInput.value = 'true';
+  });
+
+  // ============ MOSTRAR / OCULTAR SUBOPCIONES ============
+  document.getElementById('modo_borde').addEventListener('change', e => {
+    document.getElementById('bordeOptions').classList.toggle('hidden', !e.target.checked);
+  });
+  document.getElementById('modo_croma').addEventListener('change', e => {
+    document.getElementById('cromaOptions').classList.toggle('hidden', !e.target.checked);
+  });
+  document.querySelector('select[name="fondo_p5"]').addEventListener('change', e => {
+    document.getElementById('capeOptions').classList.toggle('hidden', e.target.value === 'DESACTIVADO');
+  });
+
+  // ============ NAVEGACIÓN DE PREVIEWS ============
+  btnPrev.addEventListener('click', () => {
+    currentPage = currentPage > 1 ? currentPage - 1 : 5;
+    renderPreview();
+  });
+  btnNext.addEventListener('click', () => {
+    currentPage = currentPage < 5 ? currentPage + 1 : 1;
+    renderPreview();
+  });
+
+  function renderPreview() {
+    pageInfo.textContent = `Página ${currentPage} / 5`;
+    const data = previews[currentPage];
+    if (data) {
+      previewBox.innerHTML = `<img src="${data}" alt="Página ${currentPage}">`;
+    } else {
+      previewBox.innerHTML = `<div style="color:#64748b; font-size:0.9rem;">Página ${currentPage} sin previsualización</div>`;
+    }
+  }
+
+  // ============ GENERAR ============
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    if (!skinInput.files.length) {
+      showStatus('⚠️ Selecciona una skin PNG primero', 'error');
+      return;
+    }
+
+    btnGen.disabled = true;
+    btnDownload.disabled = true;
+    btnGen.innerHTML = '<span class="spinner"></span>Generando...';
+    showStatus('⚙️ Procesando skin y generando plantillas...', 'info');
+
+    const fd = new FormData(form);
+    ['modo_borde','modo_croma','borde_1','borde_2','borde_3',
+     'cape_1','cape_2','cape_3','cape_4','cape_5'].forEach(k => {
+      const el = form.elements[k];
+      if (el) fd.set(k, el.checked ? 'true' : 'false');
+    });
+    // modo_slim ya lo escribe el input hidden
+
+    try {
+      const res = await fetch('/generar', { method: 'POST', body: fd });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({error: 'Error desconocido'}));
+        throw new Error(err.error || `Error ${res.status}`);
+      }
+      const data = await res.json();
+
+      pdfBase64 = data.pdf;
+      previews = {};
+      for (const k in data.previews) {
+        previews[parseInt(k)] = data.previews[k];
+      }
+
+      previewNav.classList.remove('hidden');
+      currentPage = 1;
+      renderPreview();
+
+      btnDownload.disabled = false;
+      showStatus('✅ Plantillas generadas. Descárgalas cuando quieras.', 'success');
+    } catch (err) {
+      showStatus('❌ ' + err.message, 'error');
+      previewBox.innerHTML = `<div style="color:#f87171; font-size:0.9rem;">Error al generar</div>`;
+    } finally {
+      btnGen.disabled = false;
+      btnGen.innerHTML = '🚀 Generar plantillas';
+    }
+  });
+
+  // ============ DESCARGAR PDF ============
+  btnDownload.addEventListener('click', () => {
+    if (!pdfBase64) return;
+
+    const byteString = atob(pdfBase64.split(',')[1]);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([ab], { type: 'application/pdf' });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Muzz_Factory_UMB.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    showStatus('⬇️ PDF descargado', 'success');
+  });
+
+  function showStatus(msg, type) {
+    statusEl.textContent = msg;
+    statusEl.className = 'status ' + type;
+  }
+</script>
+</body>
+</html>
