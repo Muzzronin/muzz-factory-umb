@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Muzz Factory UMB</title>
+
+<!-- ============ GOOGLE ADSENSE ============ -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9583696442138630"
+     crossorigin="anonymous"></script>
+
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -21,7 +26,7 @@
   /* ============ HEADER ============ */
   header {
     text-align: center;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
     padding-bottom: 20px;
     border-bottom: 1px solid rgba(255, 140, 0, 0.15);
   }
@@ -37,6 +42,32 @@
     color: #a8a8a8;
     font-size: 0.92rem;
     letter-spacing: 0.3px;
+  }
+
+  /* ============ ADSENSE CONTENEDORES ============ */
+  .ad-container {
+    margin: 16px 0;
+    padding: 10px;
+    background: #323236;
+    border: 1px solid #4a4a4f;
+    border-radius: 10px;
+    text-align: center;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .ad-container .ad-label {
+    font-size: 0.65rem;
+    color: #6a6a6f;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .ad-container ins {
+    display: block;
+    width: 100%;
   }
 
   /* ============ LAYOUT ============ */
@@ -351,10 +382,25 @@
 </head>
 <body>
 <div class="container">
+
+  <!-- HEADER -->
   <header>
     <h1>Muzz Factory UMB</h1>
     <p class="subtitle">Generador de plantillas papercraft para Minecraft</p>
   </header>
+
+  <!-- ============ ANUNCIO 1: Banner superior ============ -->
+  <div class="ad-container">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-9583696442138630"
+         data-ad-slot="auto"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
 
   <form id="form" enctype="multipart/form-data">
     <div class="layout">
@@ -373,7 +419,6 @@
             <div class="filename" id="fileName"></div>
           </div>
 
-          <!-- MINIATURA DE LA SKIN CARGADA -->
           <div class="skin-preview hidden" id="skinPreview">
             <div class="label">Skin cargada</div>
             <img id="skinImg" src="" alt="Skin cargada">
@@ -498,10 +543,36 @@
             <button type="button" id="btnNext">Siguiente →</button>
           </div>
         </div>
+
+        <!-- ============ ANUNCIO 2: Bajo el panel de vista previa ============ -->
+        <div class="ad-container">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-9583696442138630"
+               data-ad-slot="auto"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
       </div>
 
     </div>
   </form>
+
+  <!-- ============ ANUNCIO 3: Antes del footer ============ -->
+  <div class="ad-container">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-9583696442138630"
+         data-ad-slot="auto"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
 
   <footer>Muzz Factory UMB · Papercraft Generator</footer>
 </div>
@@ -528,11 +599,10 @@
   const btnSlim = document.getElementById('btnSlim');
   const modoSlimInput = document.getElementById('modo_slim');
 
-  // Estado local del navegador
   let pdfBase64 = null;
   let currentPage = 1;
   let previews = {};
-  let nombreBaseSkin = 'skin';   // para nombrar el PDF
+  let nombreBaseSkin = 'skin';
 
   // ============ DRAG & DROP ============
   dropZone.addEventListener('click', () => skinInput.click());
@@ -561,16 +631,13 @@
     fileName.textContent = '✓ ' + file.name;
     dropZone.classList.add('has-file');
 
-    // Guardar el nombre base (sin .png) para el PDF
     nombreBaseSkin = file.name.replace(/\.png$/i, '') || 'skin';
 
-    // Mostrar miniatura de la skin cargada
     const url = URL.createObjectURL(file);
     skinImg.onload = () => URL.revokeObjectURL(url);
     skinImg.src = url;
     skinPreview.classList.remove('hidden');
 
-    // Detectar tipo
     const img = new Image();
     img.onload = () => {
       if (img.width === 64 && img.height === 64) {
@@ -662,7 +729,6 @@
       for (const k in data.previews) {
         previews[parseInt(k)] = data.previews[k];
       }
-      // Guardar el nombre base que devuelve el servidor
       if (data.nombre_base) {
         nombreBaseSkin = data.nombre_base;
       }
@@ -697,7 +763,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `U.M.B.${nombreBaseSkin}_by_Muzz_Ronin.pdf`;   // ← nombre dinámico
+    a.download = `U.M.B.${nombreBaseSkin}_by_Muzz_Ronin.pdf`;
     document.body.appendChild(a);
     a.click();
     a.remove();
