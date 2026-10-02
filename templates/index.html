@@ -8,27 +8,42 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Segoe UI', system-ui, sans-serif;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: #2a2a2e;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(255, 140, 0, 0.06), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(255, 140, 0, 0.04), transparent 40%);
     color: #e8e8e8;
     min-height: 100vh;
     padding: 20px;
   }
-  .container { max-width: 1100px; margin: 0 auto; }
-  header { text-align: center; margin-bottom: 24px; }
-  h1 {
-    font-size: 2rem;
-    background: linear-gradient(90deg, #4ade80, #22d3ee, #a78bfa);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    margin-bottom: 6px;
-  }
-  .subtitle { color: #94a3b8; font-size: 0.9rem; }
+  .container { max-width: 1150px; margin: 0 auto; }
 
+  /* ============ HEADER ============ */
+  header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 140, 0, 0.15);
+  }
+  h1 {
+    font-size: 2.1rem;
+    color: #ff8c00;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    font-weight: 800;
+    text-shadow: 0 2px 12px rgba(255, 140, 0, 0.25);
+  }
+  .subtitle {
+    color: #a8a8a8;
+    font-size: 0.92rem;
+    letter-spacing: 0.3px;
+  }
+
+  /* ============ LAYOUT ============ */
   .layout {
     display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 20px;
+    grid-template-columns: 400px 1fr;
+    gap: 22px;
     align-items: start;
   }
   @media (max-width: 900px) {
@@ -36,20 +51,23 @@
   }
 
   .card {
-    background: rgba(30, 41, 59, 0.75);
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    border-radius: 14px;
+    background: #38383c;
+    border: 1px solid #4a4a4f;
+    border-radius: 12px;
     padding: 16px;
     margin-bottom: 14px;
-    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   }
   .card h2 {
-    font-size: 0.95rem;
-    color: #22d3ee;
-    margin-bottom: 10px;
+    font-size: 0.92rem;
+    color: #ff8c00;
+    margin-bottom: 11px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
   }
   .card .num {
     display: inline-flex;
@@ -58,140 +76,212 @@
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: rgba(34, 211, 238, 0.15);
-    color: #22d3ee;
-    font-size: 0.75rem;
-    font-weight: 700;
+    background: rgba(255, 140, 0, 0.15);
+    color: #ff8c00;
+    font-size: 0.72rem;
+    font-weight: 800;
+    border: 1px solid rgba(255, 140, 0, 0.35);
   }
 
   /* ============ SKIN ============ */
   .drop-zone {
-    border: 2px dashed #475569;
-    border-radius: 12px;
+    border: 2px dashed #5a5a5f;
+    border-radius: 10px;
     padding: 20px 14px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s;
-    background: rgba(15, 23, 42, 0.4);
+    transition: all 0.25s;
+    background: #2e2e32;
   }
   .drop-zone:hover, .drop-zone.dragover {
-    border-color: #22d3ee;
-    background: rgba(34, 211, 238, 0.08);
+    border-color: #ff8c00;
+    background: rgba(255, 140, 0, 0.06);
   }
-  .drop-zone.has-file { border-color: #4ade80; background: rgba(74, 222, 128, 0.08); }
+  .drop-zone.has-file {
+    border-color: #4ade80;
+    background: rgba(74, 222, 128, 0.05);
+    padding: 14px;
+  }
   .drop-zone input { display: none; }
   .drop-zone .icon { font-size: 1.6rem; margin-bottom: 4px; }
-  .drop-zone .text { color: #94a3b8; font-size: 0.82rem; }
-  .drop-zone .filename { color: #4ade80; font-weight: 600; margin-top: 6px; font-size: 0.85rem; }
+  .drop-zone .text { color: #a8a8a8; font-size: 0.82rem; }
+  .drop-zone .filename {
+    color: #4ade80;
+    font-weight: 600;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    word-break: break-all;
+  }
+
+  /* ============ MINIATURA SKIN CARGADA ============ */
+  .skin-preview {
+    margin-top: 12px;
+    text-align: center;
+  }
+  .skin-preview .label {
+    font-size: 0.75rem;
+    color: #a8a8a8;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 6px;
+  }
+  .skin-preview img {
+    width: 160px;
+    height: 160px;
+    image-rendering: pixelated;
+    border-radius: 8px;
+    border: 1px solid #4a4a4f;
+    background: #2e2e32;
+    padding: 6px;
+  }
 
   /* ============ BOTONES GRANDES ============ */
   button.big {
-    width: 100%; padding: 13px; font-size: 1rem; font-weight: 700;
-    border: none; border-radius: 10px; cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+    padding: 13px;
+    font-size: 0.98rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
     margin-top: 4px;
+    letter-spacing: 0.3px;
   }
   button.generate {
-    background: linear-gradient(90deg, #4ade80, #22d3ee);
-    color: #0f172a;
+    background: linear-gradient(90deg, #ff8c00, #ff6a00);
+    color: #1a1a1c;
   }
   button.generate:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(34, 211, 238, 0.4);
+    box-shadow: 0 8px 22px rgba(255, 140, 0, 0.45);
   }
   button.download {
-    background: linear-gradient(90deg, #a78bfa, #f472b6);
-    color: #0f172a;
+    background: linear-gradient(90deg, #ff9d2e, #ffb347);
+    color: #1a1a1c;
   }
   button.download:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(167, 139, 250, 0.4);
+    box-shadow: 0 8px 22px rgba(255, 157, 46, 0.45);
   }
-  button.big:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.big:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(0.6);
+  }
 
   /* ============ TOGGLE SLIM ============ */
-  .toggle-row {
-    display: flex; gap: 8px;
-  }
+  .toggle-row { display: flex; gap: 8px; }
   .toggle-btn {
     flex: 1;
     padding: 11px 10px;
-    border: 1px solid #475569;
-    border-radius: 9px;
-    background: #1e293b;
-    color: #94a3b8;
-    font-size: 0.88rem;
+    border: 1px solid #4a4a4f;
+    border-radius: 8px;
+    background: #2e2e32;
+    color: #a8a8a8;
+    font-size: 0.85rem;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
+    letter-spacing: 0.4px;
   }
   .toggle-btn.active {
-    background: linear-gradient(90deg, #7e57c2, #a78bfa);
-    color: white;
-    border-color: #a78bfa;
-    box-shadow: 0 4px 15px rgba(167, 139, 250, 0.3);
+    background: linear-gradient(90deg, #ff8c00, #ff6a00);
+    color: #1a1a1c;
+    border-color: #ff8c00;
+    box-shadow: 0 4px 14px rgba(255, 140, 0, 0.3);
   }
-  .toggle-btn:not(.active):hover { background: #334155; }
+  .toggle-btn:not(.active):hover { background: #3d3d42; color: #e8e8e8; }
 
-  /* ============ INFO SKIN ============ */
+  /* ============ INFO ============ */
   .info-line {
     padding: 9px 11px;
-    background: rgba(15, 23, 42, 0.5);
-    border-radius: 8px;
+    background: #2e2e32;
+    border-radius: 7px;
     font-size: 0.85rem;
-    color: #cbd5e1;
     display: flex;
     align-items: center;
     gap: 8px;
+    border-left: 3px solid #ff8c00;
   }
-  .info-line .label { color: #94a3b8; }
-  .info-line .value { color: #ffaa00; font-weight: 600; }
+  .info-line .label { color: #a8a8a8; }
+  .info-line .value { color: #ffffff; font-weight: 700; }
 
   /* ============ CHECKBOXES / SELECTS ============ */
   .checkbox-row {
-    display: flex; align-items: center; gap: 9px; padding: 8px 10px;
-    background: rgba(15, 23, 42, 0.5); border-radius: 7px; margin-bottom: 5px;
-    cursor: pointer; transition: background 0.2s; font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 10px;
+    background: #2e2e32;
+    border-radius: 7px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 0.85rem;
+    color: #d0d0d0;
   }
-  .checkbox-row:hover { background: rgba(34, 211, 238, 0.1); }
+  .checkbox-row:hover { background: #3d3d42; }
   .checkbox-row input[type="checkbox"] {
-    width: 16px; height: 16px; accent-color: #22d3ee; cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: #ff8c00;
+    cursor: pointer;
   }
 
   .select-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 10px; background: rgba(15, 23, 42, 0.5);
-    border-radius: 7px; margin-bottom: 5px; font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    background: #2e2e32;
+    border-radius: 7px;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    color: #d0d0d0;
   }
   .select-row select {
-    background: #1e293b; color: #e8e8e8; border: 1px solid #475569;
-    border-radius: 6px; padding: 4px 8px; font-size: 0.82rem; cursor: pointer;
+    background: #1f1f22;
+    color: #e8e8e8;
+    border: 1px solid #4a4a4f;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    outline: none;
   }
+  .select-row select:focus { border-color: #ff8c00; }
 
   .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 
   .section-label {
-    display: block; font-size: 0.78rem; color: #cbd5e1;
-    margin: 8px 0 5px 0; font-weight: 600;
+    display: block;
+    font-size: 0.75rem;
+    color: #a8a8a8;
+    margin: 8px 0 5px 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   /* ============ PREVIEW ============ */
   .preview-box {
-    background: #0f172a;
+    background: #1f1f22;
     border-radius: 10px;
-    padding: 14px;
+    padding: 16px;
     text-align: center;
-    min-height: 300px;
+    min-height: 320px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 1px solid #4a4a4f;
   }
   .preview-box img {
     max-width: 100%;
-    max-height: 520px;
+    max-height: 540px;
     image-rendering: pixelated;
     border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   }
   .preview-nav {
     display: flex;
@@ -201,38 +291,68 @@
     gap: 10px;
   }
   .preview-nav button {
-    background: #1e293b; color: #e8e8e8; border: 1px solid #475569;
-    border-radius: 8px; padding: 7px 13px; cursor: pointer; font-size: 0.85rem;
+    background: #2e2e32;
+    color: #e8e8e8;
+    border: 1px solid #4a4a4f;
+    border-radius: 7px;
+    padding: 7px 13px;
+    cursor: pointer;
+    font-size: 0.85rem;
     transition: all 0.2s;
+    font-weight: 600;
   }
-  .preview-nav button:hover:not(:disabled) { background: #334155; }
-  .preview-nav .page-info { font-weight: 600; color: #ffaa00; font-size: 0.88rem; }
+  .preview-nav button:hover:not(:disabled) {
+    background: #3d3d42;
+    border-color: #ff8c00;
+    color: #ff8c00;
+  }
+  .preview-nav .page-info {
+    font-weight: 700;
+    color: #ff8c00;
+    font-size: 0.88rem;
+    letter-spacing: 0.4px;
+  }
 
   /* ============ STATUS ============ */
   .status {
-    text-align: center; padding: 10px; border-radius: 8px;
-    font-size: 0.85rem; display: none;
+    text-align: center;
+    padding: 10px;
+    border-radius: 7px;
+    font-size: 0.85rem;
+    display: none;
+    font-weight: 600;
   }
-  .status.info { background: rgba(34, 211, 238, 0.15); color: #22d3ee; display: block; }
+  .status.info { background: rgba(255, 140, 0, 0.12); color: #ff8c00; display: block; }
   .status.error { background: rgba(239, 68, 68, 0.15); color: #f87171; display: block; }
-  .status.success { background: rgba(74, 222, 128, 0.15); color: #4ade80; display: block; }
+  .status.success { background: rgba(74, 222, 128, 0.12); color: #4ade80; display: block; }
 
   .spinner {
-    display: inline-block; width: 13px; height: 13px;
-    border: 2px solid rgba(15,23,42,0.3); border-top-color: #0f172a;
-    border-radius: 50%; animation: spin 0.8s linear infinite;
-    vertical-align: middle; margin-right: 7px;
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    border: 2px solid rgba(26, 26, 28, 0.3);
+    border-top-color: #1a1a1c;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 7px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  footer { text-align: center; color: #64748b; font-size: 0.78rem; padding: 24px 0 10px; }
+  footer {
+    text-align: center;
+    color: #6a6a6f;
+    font-size: 0.78rem;
+    padding: 24px 0 10px;
+    letter-spacing: 0.3px;
+  }
   .hidden { display: none !important; }
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <h1>🧩 Muzz Factory UMB</h1>
+    <h1>Muzz Factory UMB</h1>
     <p class="subtitle">Generador de plantillas papercraft para Minecraft</p>
   </header>
 
@@ -251,6 +371,12 @@
             <div class="text">Arrastra tu skin PNG o haz clic</div>
             <div class="text" style="font-size:0.72rem; margin-top:3px;">64×64 o 128×128</div>
             <div class="filename" id="fileName"></div>
+          </div>
+
+          <!-- MINIATURA DE LA SKIN CARGADA -->
+          <div class="skin-preview hidden" id="skinPreview">
+            <div class="label">Skin cargada</div>
+            <img id="skinImg" src="" alt="Skin cargada">
           </div>
         </div>
 
@@ -361,8 +487,8 @@
         <div class="card">
           <h2>👁️ Panel de vista previa</h2>
           <div class="preview-box" id="previewBox">
-            <div style="color:#64748b; font-size:0.9rem; text-align:center;">
-              Sube una skin y pulsa <b>Generar</b><br>
+            <div style="color:#6a6a6f; font-size:0.9rem; text-align:center;">
+              Sube una skin y pulsa <b style="color:#ff8c00;">Generar</b><br>
               <span style="font-size:0.8rem;">Las 5 páginas aparecerán aquí</span>
             </div>
           </div>
@@ -395,6 +521,8 @@
   const btnPrev = document.getElementById('btnPrev');
   const btnNext = document.getElementById('btnNext');
   const txtTipo = document.getElementById('txtTipo');
+  const skinPreview = document.getElementById('skinPreview');
+  const skinImg = document.getElementById('skinImg');
 
   const btnNormal = document.getElementById('btnNormal');
   const btnSlim = document.getElementById('btnSlim');
@@ -404,6 +532,7 @@
   let pdfBase64 = null;
   let currentPage = 1;
   let previews = {};
+  let nombreBaseSkin = 'skin';   // para nombrar el PDF
 
   // ============ DRAG & DROP ============
   dropZone.addEventListener('click', () => skinInput.click());
@@ -414,31 +543,34 @@
     dropZone.classList.remove('dragover');
     if (e.dataTransfer.files.length) {
       skinInput.files = e.dataTransfer.files;
-      updateFileName();
+      onSkinSelected();
     }
   });
-  skinInput.addEventListener('change', () => {
-    updateFileName();
-    detectarTipoSkin();
-  });
+  skinInput.addEventListener('change', onSkinSelected);
 
-  function updateFileName() {
-    if (skinInput.files.length) {
-      fileName.textContent = '✓ ' + skinInput.files[0].name;
-      dropZone.classList.add('has-file');
-    } else {
+  function onSkinSelected() {
+    if (!skinInput.files.length) {
       fileName.textContent = '';
       dropZone.classList.remove('has-file');
-    }
-  }
-
-  // Detectar tipo de skin leyendo las dimensiones del PNG en el navegador
-  function detectarTipoSkin() {
-    if (!skinInput.files.length) {
+      skinPreview.classList.add('hidden');
       txtTipo.textContent = '—';
       return;
     }
+
     const file = skinInput.files[0];
+    fileName.textContent = '✓ ' + file.name;
+    dropZone.classList.add('has-file');
+
+    // Guardar el nombre base (sin .png) para el PDF
+    nombreBaseSkin = file.name.replace(/\.png$/i, '') || 'skin';
+
+    // Mostrar miniatura de la skin cargada
+    const url = URL.createObjectURL(file);
+    skinImg.onload = () => URL.revokeObjectURL(url);
+    skinImg.src = url;
+    skinPreview.classList.remove('hidden');
+
+    // Detectar tipo
     const img = new Image();
     img.onload = () => {
       if (img.width === 64 && img.height === 64) {
@@ -492,7 +624,7 @@
     if (data) {
       previewBox.innerHTML = `<img src="${data}" alt="Página ${currentPage}">`;
     } else {
-      previewBox.innerHTML = `<div style="color:#64748b; font-size:0.9rem;">Página ${currentPage} sin previsualización</div>`;
+      previewBox.innerHTML = `<div style="color:#6a6a6f; font-size:0.9rem;">Página ${currentPage} sin previsualización</div>`;
     }
   }
 
@@ -516,7 +648,6 @@
       const el = form.elements[k];
       if (el) fd.set(k, el.checked ? 'true' : 'false');
     });
-    // modo_slim ya lo escribe el input hidden
 
     try {
       const res = await fetch('/generar', { method: 'POST', body: fd });
@@ -530,6 +661,10 @@
       previews = {};
       for (const k in data.previews) {
         previews[parseInt(k)] = data.previews[k];
+      }
+      // Guardar el nombre base que devuelve el servidor
+      if (data.nombre_base) {
+        nombreBaseSkin = data.nombre_base;
       }
 
       previewNav.classList.remove('hidden');
@@ -562,13 +697,13 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'Muzz_Factory_UMB.pdf';
+    a.download = `U.M.B.${nombreBaseSkin}_by_Muzz_Ronin.pdf`;   // ← nombre dinámico
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
 
-    showStatus('⬇️ PDF descargado', 'success');
+    showStatus(`⬇️ PDF descargado: U.M.B.${nombreBaseSkin}_by_Muzz_Ronin.pdf`, 'success');
   });
 
   function showStatus(msg, type) {
