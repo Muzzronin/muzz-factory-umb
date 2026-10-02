@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 import os
 import io
@@ -24,16 +24,9 @@ def index():
 
 @app.route('/generar', methods=['POST'])
 def generar():
-    """
-    Genera las plantillas y devuelve TODO en una sola respuesta JSON:
-      - pdf: PDF en base64
-      - previews: las 5 páginas en base64
-      - nombre_base: nombre del archivo original sin .png (para nombrar el PDF)
-    Sin estado global → cada usuario es independiente, sin condiciones de carrera.
-    """
+    """Genera plantillas y devuelve PDF + previews + nombre_base en una sola respuesta."""
     temp_path = None
     try:
-        # ---- Validar archivo ----
         if 'skin' not in request.files:
             return jsonify({'error': 'No se envió ninguna skin'}), 400
 
@@ -44,7 +37,6 @@ def generar():
         if not allowed_file(file.filename):
             return jsonify({'error': 'Solo se permiten archivos PNG'}), 400
 
-        # ---- Leer opciones del formulario ----
         modo_slim = request.form.get('modo_slim', 'false').lower() == 'true'
         modo_borde = request.form.get('modo_borde', 'false').lower() == 'true'
         modo_croma = request.form.get('modo_croma', 'false').lower() == 'true'
@@ -65,21 +57,20 @@ def generar():
         cape_4 = request.form.get('cape_4', 'false').lower() == 'true'
         cape_5 = request.form.get('cape_5', 'false').lower() == 'true'
 
-        # ---- Nombre original del usuario (para nombrar el PDF final) ----
+        # Nombre original del usuario (para nombrar el PDF final)
         original_name = secure_filename(file.filename)
         if original_name.lower().endswith('.png'):
-            nombre_base = original_name[:-4]  # quitamos ".png"
+            nombre_base = original_name[:-4]
         else:
             nombre_base = original_name
         if not nombre_base:
             nombre_base = "skin"
 
-        # ---- Nombre único en disco para evitar colisiones entre usuarios ----
+        # Nombre único en disco para evitar colisiones entre usuarios
         temp_filename = f"{uuid.uuid4().hex}.png"
         temp_path = os.path.join('/tmp', temp_filename)
         file.save(temp_path)
 
-        # ---- Generar plantillas ----
         gen = UMB_Generator()
         gen.importar_skin(temp_path)
         gen.modo_slim = modo_slim
@@ -92,13 +83,11 @@ def generar():
 
         gen.generar_todas()
 
-        # ---- Exportar PDF a memoria ----
         pdf_buffer = io.BytesIO()
         gen.exportar_pdf_memoria(pdf_buffer)
         pdf_buffer.seek(0)
         pdf_b64 = base64.b64encode(pdf_buffer.getvalue()).decode()
 
-        # ---- Generar previews en base64 ----
         previews = {}
         for num in range(1, 6):
             if gen.plantillas.get(num):
@@ -108,14 +97,12 @@ def generar():
                 img.save(img_buffer, format='PNG')
                 previews[str(num)] = 'data:image/png;base64,' + base64.b64encode(img_buffer.getvalue()).decode()
 
-        # ---- Limpiar archivo temporal ----
         try:
             os.remove(temp_path)
         except OSError:
             pass
         temp_path = None
 
-        # ---- Devolver TODO en una sola respuesta ----
         return jsonify({
             'pdf': 'data:application/pdf;base64,' + pdf_b64,
             'previews': previews,
@@ -127,12 +114,16 @@ def generar():
     except Exception as e:
         return jsonify({'error': f'Error interno: {str(e)}'}), 500
     finally:
-        # Asegurar limpieza del temporal incluso si hubo error
         if temp_path and os.path.exists(temp_path):
             try:
                 os.remove(temp_path)
             except OSError:
                 pass
+
+
+@app.route('/ads.txt')
+def ads_txt():
+    return send_from_directory('static', 'ads.txt', mimetype='text/plain')
 
 
 @app.route('/health')
